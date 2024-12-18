@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <link rel="stylesheet" href="/styles/manageEmployee.css">
+    </head>
+
+    <body>
+
+        <div class="handleform">
+            <nav>
+                <form action="/api/employees/card">
+                    <button type="submit">View all employees cards</button>
+                </form>
+            </nav>
+            <form method="POST" action="/api/employees" id="mainform"
+                class="form">
+                <input id="setPut" style="display: none;" type="hidden"
+                    name="_method"
+                    value="PUT">
+                <h1 class="a11y-hidden">Manage Employee Form</h1>
+                <div>
+                    <label class="label-email">
+                        <input type="text" id="full_name"
+                            name="full_name"
+                            class="text" tabindex="1"
+                            required />
+                        <span class="required">Full name</span>
+                    </label>
+                </div>
+                <div>
+                    <label class="label-email">
+                        <input type="text" id="salary" name="salary"
+                            class="text"
+                            tabindex="1"
+                            required />
+                        <span class="required">Salary</span>
+                    </label>
+                </div>
+                <div>
+                    <label class="label-email">
+                        <input type="text" class="text" id="city" name="city"
+                            tabindex="1"
+                            required />
+                        <span class="required">City</span>
+                    </label>
+                </div>
+                <div>
+                    <label class="label-email">
+                        <input type="text" id="avatar" name="avatar"
+                            class="text"
+                            tabindex="1"
+                            required />
+                        <span class="required">Avatar URL</span>
+                    </label>
+
+                </div>
+
+                <figure aria-hidden="true">
+                    <div class="person-body"></div>
+                    <div class="neck skin"></div>
+                    <div class="head skin">
+                        <div class="eyes"></div>
+                        <div class="mouth"></div>
+                    </div>
+                    <div class="hair"></div>
+                    <div class="ears"></div>
+                    <div class="shirt-1"></div>
+                    <div class="shirt-2"></div>
+                </figure>
+
+                <button type="submit" id="submitBtn" class="btnManage">CREATE
+                    NEW</button>
+
+            </form>
+        </div>
+
+        <div class="table-users">
+            <div class="header">Employee</div>
+
+            <table cellspacing="0">
+                <thead>
+                    <tr>
+                        <th width="100">Employee ID</th>
+                        <th>Name</th>
+                        <th>Salary</th>
+                        <th>City</th>
+                        <th>Avatar</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <% emp_list.forEach(emp => { %>
+                    <tr>
+                        <td><%= emp.emp_id %></td>
+                        <td><%= emp.full_name %></td>
+                        <td>$ <%= emp.salary %></td>
+                        <td><%= emp.city %></td>
+                        <td><img
+                                src="<%= emp.avatar %>"
+                                alt /></td>
+                        <td>
+                            <button
+                                onclick="detailCard('<%= emp.emp_id %>')">View
+                                detail</button>
+                            <button
+                                onclick="editEmployee('<%= emp.emp_id %>', '<%= emp.full_name %>', '<%= emp.salary %>', '<%= emp.city %>', '<%= emp.avatar %>')">Edit</button>
+                            <form id="formRemove">
+                                <input type="hidden" name="_method"
+                                    value="DELETE">
+                                <button type="button"
+                                    onclick="removeEmployee('<%= emp.emp_id %>')">Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+
+        <script>
+
+            function removeEmployee(empId){
+                let rmform = document.querySelector("#formRemove");
+                rmform.method= 'POST';
+                rmform.action = `/api/employees/${empId}?_method=DELETE`;
+                rmform.submit();
+            }
+            function detailCard(empId){
+                location = `/api/employees/${empId}`
+            }
+            function editEmployee(empId, full_name, salary, city, avatar){
+                // console.log(full_name, salary, city, avatar)
+                document.querySelector("#full_name").value = full_name;
+                document.querySelector("#salary").value = salary;
+                document.querySelector("#city").value = city;
+                document.querySelector("#avatar").value = avatar;
+                document.querySelector("#setPut").style.display = 'block';
+                document.querySelector("#submitBtn").innerText = "Update Employee";
+                document.querySelector("#mainform").action = `/api/employees/${empId}?_method=PUT`;
+                            
+
+
+            }
+
+        </script>
+    </body>
+</html>
